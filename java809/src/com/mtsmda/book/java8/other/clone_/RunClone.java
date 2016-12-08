@@ -1,5 +1,6 @@
 package com.mtsmda.book.java8.other.clone_;
 
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
  */
 public class RunClone {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         User user = new User(15, "ivanovici", LocalDate.of(2015, 10, 05));
         System.out.println(user);
 
@@ -54,6 +55,37 @@ public class RunClone {
         System.out.println(car);
         System.out.println(carClone);
 
+
+        System.out.println("\nClone contructor\n");
+        Person person = new Person("Ivanov", "Ivan", 25);
+        Person otherPerson = new Person(person);
+        System.out.println(person);
+        System.out.println(otherPerson);
+        person.setAge(29);
+        System.out.println(person);
+        System.out.println(otherPerson);
+
+        System.out.println("\nClone via serialization\n");
+
+        FootballClub footballClub = new FootballClub("Barca", 109);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream ous = new ObjectOutputStream(baos);
+        ous.writeObject(footballClub);
+        ous.close();
+
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(baos.toByteArray());
+        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+        FootballClub footballClubFromSerialization = (FootballClub) objectInputStream.readObject();
+        footballClub.setAge(10);
+        System.out.println(footballClub);
+        System.out.println(footballClubFromSerialization);
+
+        System.out.println("\nClone custom solution\n");
+        ProgrammingLanguage programmingLanguage = new ProgrammingLanguage("Java", "", 1995);
+        ProgrammingLanguage clone = programmingLanguage.clone();
+        programmingLanguage.setAuthorCreator("Nestor");
+        System.out.println(programmingLanguage);
+        System.out.println(clone);
     }
 
 }
